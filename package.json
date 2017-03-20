@@ -1,0 +1,30 @@
+{
+  "name": "rnapp-server",
+  "version": "1.0.0",
+  "description": "a enducational app based on ReactNative.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://xwj@gitlab.com/xwj/rnapp-server.git"
+  },
+  "keywords": [
+    "ReactNative"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/xwj/rnapp-server/issues"
+  },
+  "homepage": "https://gitlab.com/xwj/rnapp-server#README",
+  "dependencies": {
+    "body-parser": "1.17.1",
+    "cookie-parser": "1.4.3",
+    "express": "4.15.2",
+    "express-session": "1.15.1",
+    "lodash": "4.17.4",
+    "mongoose": "4.9.1"
+  }
+}
