@@ -5,7 +5,7 @@ node_modules/
 public/
 
 # JetBrains IDE project files
-idea/
+.idea/
 
 # npm log
 npm-debug.log
