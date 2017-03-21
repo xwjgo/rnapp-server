@@ -1,21 +1,37 @@
 class Api {
+    /**
+     * 获取所有课程分类
+     * @param req
+     * @param res
+     */
     static getAllCategories (req, res) {
-        console.log(req.url);
         res.end('getAllCategories...');
     }
 
+    /**
+     * 获取单个课程分类
+     * @param req
+     * @param res
+     */
     static getOneCategory (req, res) {
-        console.log(req.url);
         res.end('getOneCategory...');
     }
 
+    /**
+     * 获取所有课程
+     * @param req
+     * @param res
+     */
     static getAllCourses (req, res) {
-        console.log(req.url);
         res.end('getAllCourses...');
     }
 
+    /**
+     * 获取单个课程
+     * @param req
+     * @param res
+     */
     static getOneCourse (req, res) {
-        console.log(req.url);
         res.end('getOneCourse...');
     }
 }

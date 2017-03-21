@@ -1,8 +1,10 @@
 const express = require('express');
+const morgan = require('morgan');
 const settings = require('./settings');
 const routers = require('./routers');
 const app = express();
 
+app.use(morgan('tiny'));
 app.use('/', routers);
 
 const port = settings.server.port;
