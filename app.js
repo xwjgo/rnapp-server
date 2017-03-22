@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const morgan = require('morgan');
 const settings = require('./settings');
@@ -21,7 +23,7 @@ app.all('*', (req, res) => {
 const port = settings.server.port;
 app.listen(port, (error) => {
     if (error) {
-        console.log(error);
+        console.error(error.stack);
     } else {
         console.info(`==> 🌎  Listening on port ${port}. Open http://localhost:${port} in your browser.`);
     }
