@@ -22,7 +22,9 @@ class Database {
      * @private
      */
     _createDbConnection () {
-        const db = mongoose.connect(settings.db).connection;
+        const isProduction = settings.env === 'production';
+        const dbString = isProduction ? settings.db : 'mongodb://localhost:27017/rnapp';
+        const db = mongoose.connect(dbString).connection;
         db.on('error', (err) => {
             console.error(err.stack);
         });
