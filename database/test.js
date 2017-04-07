@@ -5,8 +5,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 
 // 增加计算机分类
 const computer_category = new Category({
-    category_name: '计算机',
-    courses: [new ObjectId('58d226949f0b3b26589c856e'), new ObjectId('58d226949f0b3b265899a563'), new ObjectId('58d226949f0b3b2658990563')]
+    category_name: '计算机'
 });
 
 computer_category.save((err, result, numAffected) => {
@@ -23,7 +22,7 @@ const computer_network = new Course({
     course_name: '计算机网络',
     teacher: '史政',
     picture: 'computer_network.png',
-    category: '网络',
+    category: '计算机',
     description: '这门课讲述了计算机网络的基础知识',
     chapters: [
         {

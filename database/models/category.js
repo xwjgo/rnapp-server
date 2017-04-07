@@ -13,8 +13,7 @@ const categorySchema = new Schema({
     category_name: {
         type: String,
         required: true
-    },
-    courses: [ObjectId]
+    }
 });
 
 module.exports = db.model('category', categorySchema);
