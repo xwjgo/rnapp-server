@@ -17,8 +17,7 @@ class Api {
         categoryCtl.findAllCategories((err, docs) => {
             if (err) {
                 console.error(err.stack);
-                res.send(500);
-                return;
+                return res.sendStatus(500);
             }
             res.json(docs);
         });
@@ -36,14 +35,12 @@ class Api {
             categoryId = new ObjectId(req.params.category_id);
         } catch (err) {
             console.error(err.stack);
-            res.send(406);
-            return;
+            return res.status(406).json({error: 'id类型不正确'});
         }
         categoryCtl.findCategoryById(categoryId, (err, doc) => {
             if (err) {
                 console.error(err.stack);
-                res.send(500);
-                return;
+                return res.sendStatus(500);
             }
             res.json(doc);
         });
@@ -58,8 +55,7 @@ class Api {
         courseCtl.findAllCourse((err, docs) => {
             if (err) {
                 console.error(err.stack);
-                res.send(500);
-                return;
+                return res.sendStatus(500);
             }
             res.json(docs);
         });
@@ -77,7 +73,7 @@ class Api {
             courseId = new ObjectId(req.params.course_id);
         } catch (err) {
             console.error(err.stack);
-            return res.sendStatus(406);
+            return res.status(406).json({error: 'query中id类型不正确'});
         }
         courseCtl.findCourseById(courseId, (err, doc) => {
             if (err) {
@@ -127,7 +123,7 @@ class Api {
                 return res.sendStatus(500);
             }
             if (results.createUser) {
-                return res.status(403).send('该用户名已经注册');
+                return res.status(403).json({error: '该用户名已经注册'});
             }
         });
     }

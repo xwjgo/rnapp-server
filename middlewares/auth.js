@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * 用户授权中间件
  */
@@ -6,7 +8,7 @@ class AuthMiddleware {
         if (req.session && req.session.user) {
             return next();
         } else {
-            return res.sendStatus(401);
+            return res.status(401).json({error: '用户未登录'});
         }
     }
 }

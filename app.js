@@ -42,7 +42,7 @@ if (!isProduction) {
 app.use('/', routers);
 // 404页面
 app.all('*', (req, res) => {
-    res.status(404).send('您请求的资源不存在');
+    res.status(404).json({error: '请求的资源不存在'});
 });
 
 const port = settings.server.port;
