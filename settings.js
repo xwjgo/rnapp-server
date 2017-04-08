@@ -11,7 +11,14 @@ const settings = {
         // 端口号
         port: 3000
     },
-    db: 'mongodb://owner:cQmYgYsDsS@121.249.216.193:27017/rnapp'
+    db: 'mongodb://owner:cQmYgYsDsS@121.249.216.193:27017/rnapp',
+    redis: {
+        port: 6379,
+        host: '121.249.216.193',
+        family: 4,
+        db: 0,
+        password: 'jTwMyDtSgX'
+    }
 };
 
 module.exports = settings;
