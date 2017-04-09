@@ -94,7 +94,6 @@ class Api {
         const body = req.body;
         const username = body.username;
         const password = Utils.encryptPassword(body.password);
-        // 用户密码加密
         async.auto({
             // 查找用户名是否已经注册
             getUser: (callback) => {
