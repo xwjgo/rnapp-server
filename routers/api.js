@@ -35,7 +35,7 @@ class Api {
             categoryId = new ObjectId(req.params.category_id);
         } catch (err) {
             console.error(err.stack);
-            return res.status(406).json({error: 'id类型不正确'});
+            return res.status(400).json({error: 'id类型不正确'});
         }
         categoryCtl.findCategoryById(categoryId, (err, doc) => {
             if (err) {
@@ -73,7 +73,7 @@ class Api {
             courseId = new ObjectId(req.params.course_id);
         } catch (err) {
             console.error(err.stack);
-            return res.status(406).json({error: 'query中id类型不正确'});
+            return res.status(400).json({error: 'query中id类型不正确'});
         }
         courseCtl.findCourseById(courseId, (err, doc) => {
             if (err) {
@@ -123,7 +123,7 @@ class Api {
                 return res.sendStatus(500);
             }
             if (results.createUser) {
-                return res.status(403).json({error: '该用户名已经注册'});
+                return res.status(400).json({error: '该用户名已经注册'});
             }
         });
     }
@@ -134,7 +134,23 @@ class Api {
      * @param res
      */
     static login (req, res) {
-
+        const body = req.body;
+        const username = body.username;
+        const password = body.password;
+        userCtl.findByUsername(username, (err, doc) => {
+            if (err) {
+                console.error(err.stack);
+                return res.sendStatus(500);
+            }
+            if (!doc) {
+                return res.status(401).json({error: '用户名不存在'});
+            }
+            if (doc.password === password) {
+                req.session.user = doc;
+                return res.json(_.pick(doc, '_id', 'username', 'reg_time', 'last_login_time', 'likes', 'collections'));
+            }
+            return res.status(401).json({error: '用户密码错误'});
+        });
     }
 }
 
