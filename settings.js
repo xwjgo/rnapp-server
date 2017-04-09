@@ -18,6 +18,12 @@ const settings = {
         family: 4,
         db: 0,
         password: 'jTwMyDtSgX'
+    },
+    // 用户密码加密
+    crypto: {
+        hash: 'sha256',
+        secret: 'password secret',
+        encoding: 'base64'
     }
 };
 

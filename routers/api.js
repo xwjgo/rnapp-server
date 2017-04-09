@@ -6,6 +6,7 @@ const categoryCtl = require('../database/controller/category');
 const courseCtl = require('../database/controller/course');
 const userCtl = require('../database/controller/user');
 const ObjectId = require('mongoose').Types.ObjectId;
+const Utils = require('../utils');
 
 class Api {
     /**
@@ -92,7 +93,8 @@ class Api {
     static register (req, res) {
         const body = req.body;
         const username = body.username;
-        const password = body.password;
+        const password = Utils.encryptPassword(body.password);
+        // 用户密码加密
         async.auto({
             // 查找用户名是否已经注册
             getUser: (callback) => {
@@ -136,7 +138,7 @@ class Api {
     static login (req, res) {
         const body = req.body;
         const username = body.username;
-        const password = body.password;
+        const password = Utils.encryptPassword(body.password);
         userCtl.findByUsername(username, (err, doc) => {
             if (err) {
                 console.error(err.stack);
