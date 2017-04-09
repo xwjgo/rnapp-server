@@ -16,5 +16,6 @@ router.get('/api/courses/:course_id', Auth.authorize, Api.getOneCourse);
 // 登陆注册
 router.post('/api/users', Api.register);
 router.post('/api/sessions', Api.login);
+router.delete('/api/sessions', Api.logout);
 
 module.exports = router;

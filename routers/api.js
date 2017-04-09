@@ -154,6 +154,20 @@ class Api {
             return res.status(401).json({error: '用户密码错误'});
         });
     }
+
+    /**
+     * 用户登出
+     * @param req
+     * @param res
+     */
+    static logout (req, res) {
+        req.session.destroy((err) => {
+            if (err) {
+                return res.sendStatus(500);
+            }
+            res.status(200).json({message: '用户登出成功'});
+        });
+    }
 }
 
 module.exports = Api;
