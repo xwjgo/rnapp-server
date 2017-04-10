@@ -10,6 +10,7 @@ const RedisStore = require('connect-redis')(session);
 const Redis = require('ioredis');
 const settings = require('./settings');
 const routers = require('./routers');
+const errorMiddleware = require('./middlewares/error');
 const app = express();
 const isProduction = (settings.env === 'production');
 
@@ -38,11 +39,13 @@ app.use(session({
 if (!isProduction) {
     app.use(morgan('tiny'));
 }
+// 错误处理
+app.use(errorMiddleware.errorHandle);
 // 路由
 app.use('/', routers);
 // 404页面
 app.all('*', (req, res) => {
-    res.status(404).json({error: '请求的资源不存在'});
+    res.sendStatus(404);
 });
 
 const port = settings.server.port;

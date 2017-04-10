@@ -5,6 +5,7 @@ const async = require('async');
 const categoryCtl = require('../database/controller/category');
 const courseCtl = require('../database/controller/course');
 const userCtl = require('../database/controller/user');
+const CustomError = require('../error');
 const ObjectId = require('mongoose').Types.ObjectId;
 const Utils = require('../utils');
 
@@ -17,8 +18,7 @@ class Api {
     static getAllCategories (req, res) {
         categoryCtl.findAllCategories((err, docs) => {
             if (err) {
-                console.error(err.stack);
-                return res.sendStatus(500);
+                return res.endError(err);
             }
             res.json(docs);
         });
@@ -36,12 +36,11 @@ class Api {
             categoryId = new ObjectId(req.params.category_id);
         } catch (err) {
             console.error(err.stack);
-            return res.status(400).json({error: 'id类型不正确'});
+            return res.endError(new CustomError({code: 1003}));
         }
         categoryCtl.findCategoryById(categoryId, (err, doc) => {
             if (err) {
-                console.error(err.stack);
-                return res.sendStatus(500);
+                return res.endError(err);
             }
             res.json(doc);
         });
@@ -55,8 +54,7 @@ class Api {
     static getAllCourses (req, res) {
         courseCtl.findAllCourse((err, docs) => {
             if (err) {
-                console.error(err.stack);
-                return res.sendStatus(500);
+                return res.endError(err);
             }
             res.json(docs);
         });
@@ -73,13 +71,11 @@ class Api {
         try {
             courseId = new ObjectId(req.params.course_id);
         } catch (err) {
-            console.error(err.stack);
-            return res.status(400).json({error: 'query中id类型不正确'});
+            return res.endError(new CustomError({code: 1003}));
         }
         courseCtl.findCourseById(courseId, (err, doc) => {
             if (err) {
-                console.error(err.stack);
-                return res.sendStatus(500);
+                return res.endError(err);
             }
             res.json(doc);
         });
@@ -94,38 +90,33 @@ class Api {
         const body = req.body;
         const username = body.username;
         const password = Utils.encryptPassword(body.password);
-        async.auto({
+        async.waterfall([
             // 查找用户名是否已经注册
-            getUser: (callback) => {
+            (callback) => {
                userCtl.findByUsername(username, (err, doc) => {
                    if (err) {
                        return callback(err);
                    }
-                   return callback(null, doc);
+                   if (doc) {
+                      return callback(new CustomError({code: 1002}))
+                   }
+                   return callback();
                });
             },
             // 创建新用户
-            createUser: ['getUser', (results, callback) => {
-                const user = results.getUser;
-                if (user) {
-                    return callback(null, user);
-                }
+            (callback) => {
                 userCtl.createUser(username, password, (err, doc) => {
                     if (err) {
                         return callback(err);
                     }
-                    res.json(_.pick(doc, '_id', 'username', 'reg_time'));
-                    return callback();
+                    return callback(null, doc);
                 });
-            }]
-        }, (err, results) => {
+            }
+        ], (err, result) => {
             if (err) {
-                console.error(err.stack);
-                return res.sendStatus(500);
+                return res.endError(err);
             }
-            if (results.createUser) {
-                return res.status(400).json({error: '该用户名已经注册'});
-            }
+            return res.json(_.pick(result, '_id', 'username', 'reg_time'));
         });
     }
 
