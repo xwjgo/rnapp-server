@@ -1,5 +1,6 @@
 'use strict';
 
+const CustomError = require('../error');
 /**
  * 用户授权中间件
  */
@@ -8,7 +9,7 @@ class AuthMiddleware {
         if (req.session && req.session.user) {
             return next();
         } else {
-            return res.status(401).json({error: '用户未登录'});
+            return res.endError(new CustomError({code: 1004, httpCode: 401}));
         }
     }
 }
