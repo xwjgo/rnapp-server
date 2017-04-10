@@ -15,6 +15,10 @@ class UserCtl {
     static findByUsername (username, callback) {
         User.findOne({username: username}, callback);
     }
+
+    static updateLoginTime(uid, callback) {
+        User.findByIdAndUpdate(uid, {$set: {last_login_time: new Date()}}, {new: true}, callback);
+    }
 }
 
 module.exports = UserCtl;

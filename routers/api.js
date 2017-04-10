@@ -35,7 +35,6 @@ class Api {
         try {
             categoryId = new ObjectId(req.params.category_id);
         } catch (err) {
-            console.error(err.stack);
             return res.endError(new CustomError({code: 1003}));
         }
         categoryCtl.findCategoryById(categoryId, (err, doc) => {
@@ -129,19 +128,40 @@ class Api {
         const body = req.body;
         const username = body.username;
         const password = Utils.encryptPassword(body.password);
-        userCtl.findByUsername(username, (err, doc) => {
+        async.waterfall([
+            // 判断用户是否存在
+            (callback) => {
+                userCtl.findByUsername(username, (err, doc) => {
+                    if (err) {
+                        return callback(err);
+                    }
+                    if (!doc) {
+                        return callback(new CustomError({code: 1000}))
+                    }
+                    return callback(null, doc);
+                })
+            },
+            // 校验密码是否正确
+            (result, callback) => {
+                if (result.password !== password) {
+                    return callback(new CustomError({code: 1001}));
+                }
+                return callback(null, result);
+            },
+            // 更新最后一次登陆时间
+            (result, callback) => {
+                userCtl.updateLoginTime(result._id, (err, doc) => {
+                    if (err) {
+                        return callback(err);
+                    }
+                    return callback(null, doc);
+                })
+            }
+        ], (err, result) => {
             if (err) {
-                console.error(err.stack);
-                return res.sendStatus(500);
+                return res.endError(err);
             }
-            if (!doc) {
-                return res.status(401).json({error: '用户名不存在'});
-            }
-            if (doc.password === password) {
-                req.session.user = doc;
-                return res.json(_.pick(doc, '_id', 'username', 'reg_time', 'last_login_time', 'likes', 'collections'));
-            }
-            return res.status(401).json({error: '用户密码错误'});
+            return res.json(_.pick(result, '_id', 'username', 'reg_time', 'last_login_time', 'likes', 'collections'));
         });
     }
 
@@ -153,9 +173,9 @@ class Api {
     static logout (req, res) {
         req.session.destroy((err) => {
             if (err) {
-                return res.sendStatus(500);
+                return res.endError(err);
             }
-            res.status(200).json({message: '用户登出成功'});
+            return res.sendStatus(200);
         });
     }
 }
