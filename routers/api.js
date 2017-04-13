@@ -30,13 +30,7 @@ class Api {
      * @param res
      */
     static getOneCategory (req, res) {
-        let categoryId;
-        // 尝试将url中的id转化为ObjectId
-        try {
-            categoryId = new ObjectId(req.params.category_id);
-        } catch (err) {
-            return res.endError(new CustomError({code: 1003}));
-        }
+        let categoryId = req.params.category_id;
         categoryCtl.findCategoryById(categoryId, (err, doc) => {
             if (err) {
                 return res.endError(err);
@@ -65,13 +59,7 @@ class Api {
      * @param res
      */
     static getOneCourse (req, res) {
-        let courseId;
-        //尝试将url中的course_id转化为ObjectId
-        try {
-            courseId = new ObjectId(req.params.course_id);
-        } catch (err) {
-            return res.endError(new CustomError({code: 1003}));
-        }
+        let courseId = req.params.course_id;
         courseCtl.findCourseById(courseId, (err, doc) => {
             if (err) {
                 return res.endError(err);
