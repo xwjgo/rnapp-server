@@ -69,6 +69,21 @@ class Api {
     }
 
     /**
+     * 获取某分类下的所有课程
+     * @param req
+     * @param res
+     */
+    static getCoursesInOneCategory (req, res) {
+        let categoryId = req.params.category_id;
+        courseCtl.findCoursesByCategoryId (categoryId, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    /**
      * 用户注册
      * @param req
      * @param res

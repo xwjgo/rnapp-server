@@ -28,7 +28,7 @@ const courseSchema = new Schema({
         required: true
     },
     picture: String,
-    category: String,
+    category_id: ObjectId,
     description: String,
     chapters: [{
         title: String,

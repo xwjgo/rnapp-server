@@ -22,6 +22,15 @@ class CourseCtl {
     static findCourseById (id, callback) {
         Course.findById(id, callback);
     }
+
+    /**
+     * 根据分类id来获取某分类下所有课程
+     * @param id
+     * @param callback
+     */
+    static findCoursesByCategoryId (id, callback) {
+        Course.find({category_id: id}, callback);
+    }
 }
 
 module.exports = CourseCtl;

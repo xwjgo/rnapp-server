@@ -22,7 +22,7 @@ const computer_network = new Course({
     course_name: '计算机网络',
     teacher: '史政',
     picture: 'computer_network.png',
-    category: '计算机',
+    category_id: new ObjectId('58df6bca77256724c43ab730'),
     description: '这门课讲述了计算机网络的基础知识',
     chapters: [
         {
