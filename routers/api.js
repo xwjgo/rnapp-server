@@ -125,6 +125,7 @@ class Api {
      * @param res
      */
     static login (req, res) {
+        console.log(req.session);
         const body = req.body;
         const username = body.username;
         const password = Utils.encryptPassword(body.password);
@@ -161,6 +162,8 @@ class Api {
             if (err) {
                 return res.endError(err);
             }
+            // 保存session
+            req.session.user = result;
             return res.json(_.pick(result, '_id', 'username', 'reg_time', 'last_login_time', 'likes', 'collections'));
         });
     }
