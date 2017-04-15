@@ -34,7 +34,10 @@ const courseSchema = new Schema({
         title: String,
         sections: [{
             title: String,
-            content: String
+            content: {
+                video: String,
+                html: String
+            }
         }]
     }],
     comments: [ObjectId],
