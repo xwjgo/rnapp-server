@@ -26,17 +26,34 @@ const computer_network = new Course({
     description: '这门课讲述了计算机网络的基础知识',
     chapters: [
         {
-            title: '概述',
+            title: '第一章 概述',
             sections: [
-                {title: '什么是网络', content: '内容由文本、图片、视频组成'},
-                {title: '网络的分类', content: '内容由文本、图片、视频组成'}
+                {
+                    title: '第一节 什么是网络',
+                    video: '/videos/1.mp4',
+                    html: '<p>由文本、图片组成</p>'
+                },
+                {
+                    title: '第二节 网络的拓扑结构',
+                    video: '/videos/1.mp4',
+                    html: '<p>由文本、图片组成</p>'
+                }
             ]
         },
         {
-            title: '物理层',
+            title: '第二章 物理层',
             sections: [
-                {title: '物理层的基本概念', content: '内容由文本、图片、视频组成'},
-                {title: '信道复用技术', content: '内容由文本、图片、视频组成'}
+                {
+                    title: '第一节 物理层的基本概念',
+                    video: '/videos/1.mp4',
+                    html: '<p>由文本、图片组成</p>'
+                },
+                {
+                    title: '第二节 信道复用技术',
+                    video: '/videos/1.mp4',
+                    html: '<p>由文本、图片组成</p>'
+                }
+
             ]
         }
     ],
