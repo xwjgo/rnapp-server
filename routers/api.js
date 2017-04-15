@@ -6,7 +6,6 @@ const categoryCtl = require('../database/controller/category');
 const courseCtl = require('../database/controller/course');
 const userCtl = require('../database/controller/user');
 const CustomError = require('../error');
-const ObjectId = require('mongoose').Types.ObjectId;
 const Utils = require('../utils');
 
 class Api {
@@ -128,7 +127,6 @@ class Api {
      * @param res
      */
     static login (req, res) {
-        console.log(req.session);
         const body = req.body;
         const username = body.username;
         const password = Utils.encryptPassword(body.password);
