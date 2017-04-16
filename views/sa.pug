@@ -34,7 +34,7 @@ html
                                     "separator_after": false,
                                     "label": "Create",
                                     "action": function () {
-                                        tree.create_node($node);
+                                        tree.edit(tree.create_node($node));
                                     }
                                 },
                                 "Rename": {
@@ -69,14 +69,28 @@ html
                         // 增加course
                         case 2:
                             tree.set_icon($node, 'iconfont icon-tree');
+                            ajax('/api/courses', {
+                                course_name: $node.text,
+                                category_id: $node.parent
+                            }, function (res) {
+                                tree.set_id($node, res._id);
+                            });
                             break;
                         // 增加chapter
                         case 3:
                             tree.set_icon($node, 'iconfont icon-leaf');
+                            ajax(`/api/courses/${$node.parents[0]}/chapters`, {
+                                title: $node.text
+                            }, function (res) {
+                                tree.set_id($node, res.chapters[res.chapters.length - 1]._id);
+                            });
                             break;
                         // 增加section
                         case 4:
                             tree.set_icon($node, 'iconfont icon-blog');
+                            ajax(`/api/courses/${$node.parents[1]}/chapters/${$node.parents[0]}/sections`, {
+                                title: $node.text
+                            });
                             break;
                         default:
                             tree.delete_node($node);
@@ -85,6 +99,20 @@ html
                 });
                 // 给节点重命名
                 $jstree.on('rename_node.jstree', function (e, data) {
+                    const $node = data.node;
+                    const depth = $node.parents.length;
+                    switch (depth) {
+                        // course重命名
+                        case 2:
+                            break;
+                        // chapter重命名
+                        case 3:
+                            break;
+                        // section重命名
+                        case 4:
+                            break;
+                        default:
+                    }
                     console.log('重名名');
                 });
                 // 删除节点
@@ -99,11 +127,11 @@ html
                     $.ajax({
                         url: url,
                         type: 'post',
-                        async: fasle,
+                        async: false,
                         data: JSON.stringify(data),
                         contentType: 'application/json;charset=UTF-8',
                         success: function (res) {
-                            success && seccess(res);
+                            success && success(res);
                         },
                         complete: function (res, status) {
                             complete && complete(res, status);
