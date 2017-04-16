@@ -29,7 +29,7 @@ class Api {
      * @param res
      */
     static getOneCategory (req, res) {
-        let categoryId = req.params.category_id;
+        const categoryId = req.params.category_id;
         categoryCtl.findCategoryById(categoryId, (err, doc) => {
             if (err) {
                 return res.endError(err);
@@ -58,7 +58,7 @@ class Api {
      * @param res
      */
     static getOneCourse (req, res) {
-        let courseId = req.params.course_id;
+        const courseId = req.params.course_id;
         courseCtl.findCourseById(courseId, (err, doc) => {
             if (err) {
                 return res.endError(err);
@@ -73,8 +73,55 @@ class Api {
      * @param res
      */
     static getCoursesInOneCategory (req, res) {
-        let categoryId = req.params.category_id;
+        const categoryId = req.params.category_id;
         courseCtl.findCoursesByCategoryId (categoryId, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    /**
+     * 新增一个课程
+     * @param req
+     * @param res
+     */
+    static createOneCourse (req, res) {
+        const course = req.body;
+        courseCtl.createOneCourse(course, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    /**
+     * 新增一个chapter
+     * @param req
+     * @param res
+     */
+    static createOneChapter (req, res) {
+        const chapter = req.body;
+        const courseId = req.params.course_id;
+        courseCtl.createOneChapter(courseId, chapter, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    /**
+     * 新增一个section
+     * @param req
+     * @param res
+     */
+    static createOneSection (req, res) {
+        const section = req.body;
+        const chapterId = req.params.chapter_id;
+        courseCtl.createOneSection(chapterId, section, (err, doc) => {
             if (err) {
                 return res.endError(err);
             }
