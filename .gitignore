@@ -1,9 +1,6 @@
 # node.js modules
 node_modules/
 
-# public files
-public/
-
 # JetBrains IDE project files
 .idea/
 

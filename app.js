@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
@@ -14,12 +15,19 @@ const errorMiddleware = require('./middlewares/error');
 const app = express();
 const isProduction = (settings.env === 'production');
 
+// 模板引擎
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 // server-favicon
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico'), {
     maxAge: 2592000000
 }));
 // serve静态资源
 app.use(express.static(path.join(__dirname, 'public')));
+// 获取静态资源路径
+_.extend(app.locals, {
+    staticFile: (filePath) => `${filePath}`
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({

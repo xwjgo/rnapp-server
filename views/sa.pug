@@ -1,0 +1,116 @@
+doctype html
+html
+    head
+        title rnapp课程管理
+        link(href=staticFile('/css/default/style.min.css') rel="stylesheet" type="text/css")
+        link(href=staticFile('/css/iconfont/iconfont.css') rel="stylesheet" type="text/css")
+    body
+        #main
+            #search
+                input(type="text")
+                button 查询
+            #menu
+            #upload
+        script(src=staticFile("/js/jquery-3.2.1.min.js") type="text/javascript")
+        script(src=staticFile("/js/jstree.min.js") type="text/javascript")
+        script(type="text/javascript").
+            $(function () {
+                const $jstree = $('#menu');
+                let tree = null;
+                // 初始化
+                $jstree.jstree({
+                    core: {
+                        multiple: false,
+                        check_callback: true,
+                        data: !{nodes}
+                    },
+                    plugins: ['dnd', 'wholerow', 'contextmenu', 'search'],
+                    contextmenu: {
+                        items: function ($node) {
+                            tree = $jstree.jstree(true);
+                            return {
+                                "Create": {
+                                    "separator_before": false,
+                                    "separator_after": false,
+                                    "label": "Create",
+                                    "action": function () {
+                                        tree.create_node($node);
+                                    }
+                                },
+                                "Rename": {
+                                    "separator_before": false,
+                                    "separator_after": false,
+                                    "label": "Rename",
+                                    "action": function () {
+                                        tree.edit($node);
+                                    }
+                                },
+                                "Remove": {
+                                    "separator_before": false,
+                                    "separator_after": false,
+                                    "label": "Remove",
+                                    "action": function () {
+                                        tree.delete_node($node);
+                                    }
+                                }
+                            };
+                        }
+                    }
+                });
+                // 搜索组件
+                $('button')[0].onclick=function () {
+                    $('#menu').jstree(true).search($('input')[0].value);
+                };
+                // 增加节点
+                $jstree.on('create_node.jstree', function (e, data) {
+                    const $node = data.node;
+                    const depth = $node.parents.length;
+                    switch (depth) {
+                        // 增加course
+                        case 2:
+                            tree.set_icon($node, 'iconfont icon-tree');
+                            break;
+                        // 增加chapter
+                        case 3:
+                            tree.set_icon($node, 'iconfont icon-leaf');
+                            break;
+                        // 增加section
+                        case 4:
+                            tree.set_icon($node, 'iconfont icon-blog');
+                            break;
+                        default:
+                            tree.delete_node($node);
+                    }
+                    console.log(data);
+                });
+                // 给节点重命名
+                $jstree.on('rename_node.jstree', function (e, data) {
+                    console.log('重名名');
+                });
+                // 删除节点
+                $jstree.on('delete_node.jstree', function (e, data) {
+                    console.log('删除节点');
+                });
+
+                /**
+                * 一些封装的常用方法
+                */
+                function ajax (url, data, success, complete, error) {
+                    $.ajax({
+                        url: url,
+                        type: 'post',
+                        async: fasle,
+                        data: JSON.stringify(data),
+                        contentType: 'application/json;charset=UTF-8',
+                        success: function (res) {
+                            success && seccess(res);
+                        },
+                        complete: function (res, status) {
+                            complete && complete(res, status);
+                        },
+                        error: function (res) {
+                            error && error(res);
+                        }
+                    })
+                }
+            });

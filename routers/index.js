@@ -3,11 +3,14 @@
 const express = require('express');
 const router = express.Router();
 const Api = require('./api');
+const Sa = require('./sa');
 const Auth = require('../middlewares/auth');
 
 /**
  * 路由总调控
  */
+// 课程后台管理
+router.get('/sa', Sa.renderSaPage);
 // 课程资源
 router.get('/api/categories', Auth.authorize, Api.getAllCategories);
 router.get('/api/categories/:category_id', Auth.authorize, Api.getOneCategory);
