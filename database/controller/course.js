@@ -1,7 +1,7 @@
 'use strict';
 
 const Course = require('../models/course');
-const ObjectId = require('mongoose').Schema.Types.ObjectId;
+const CustomError = require('../../error');
 /**
  * 课程控制器
  * @class CourseCtl
@@ -34,7 +34,7 @@ class CourseCtl {
     }
 
     /**
-     * 增加课程
+     * 增加course
      * @param course
      * @param callback
      */
@@ -47,7 +47,7 @@ class CourseCtl {
     }
 
     /**
-     * 根据courseId来增加chapter
+     * 增加chapter
      * @param courseId
      * @param chapter
      * @param callback
@@ -63,23 +63,78 @@ class CourseCtl {
     }
 
     /**
-     * 根据chapterId来增加section
+     * 增加section
+     * @param courseId
      * @param chapterId
      * @param section
      * @param callback
      */
-    static createOneSection (chapterId, section, callback) {
-        Course.findOneAndUpdate({
-            chapters: {
-                $elemMatch: {_id: chapterId}
+    static createOneSection (courseId, chapterId, section, callback) {
+        Course.findById(courseId).exec((err, doc) => {
+            if (err) {
+                return callback(err);
             }
-        }, {
-            $push: {
-                "chapters.$.sections": {title: section.title}
+            if (!doc) {
+                return callback(new CustomError({code: 2000}));
             }
+            doc.chapters.id(chapterId).sections.push(section);
+            doc.save(callback);
+        });
+    }
+
+    /**
+     * 更新course
+     * @param courseId
+     * @param newCourse
+     * @param callback
+     */
+    static updateOneCourse (courseId, newCourse, callback) {
+        Course.findByIdAndUpdate(courseId, {
+            $set: newCourse
         }, {
             new: true
         }, callback);
+    }
+
+    /**
+     * 更新chapter
+     * @param courseId
+     * @param chapterId
+     * @param newChapter
+     * @param callback
+     */
+    static updateOneChapter (courseId, chapterId, newChapter, callback) {
+        Course.findById(courseId).exec((err, doc) => {
+            if (err) {
+                return callback(err);
+            }
+            if (!doc) {
+                return callback(new CustomError({code: 2000}))
+            }
+            doc.chapters.id(chapterId).set(newChapter);
+            doc.save(callback);
+        });
+    }
+
+    /**
+     * 更新section
+     * @param courseId
+     * @param chapterId
+     * @param sectionId
+     * @param newSection
+     * @param callback
+     */
+    static updateOneSection (courseId, chapterId, sectionId, newSection, callback) {
+        Course.findById(courseId).exec((err, doc) => {
+            if (err) {
+                return callback(err);
+            }
+            if (!doc) {
+                return callback(new CustomError({code: 2000}));
+            }
+            doc.chapters.id(chapterId).sections.id(sectionId).set(newSection);
+            doc.save(callback);
+        });
     }
 }
 

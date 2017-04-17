@@ -20,6 +20,9 @@ router.get('/api/categories/:category_id/courses', Auth.authorize, Api.getCourse
 router.post('/api/courses', Api.createOneCourse);
 router.post('/api/courses/:course_id/chapters', Api.createOneChapter);
 router.post('/api/courses/:course_id/chapters/:chapter_id/sections', Api.createOneSection);
+router.put('/api/courses/:course_id', Api.updateOneCourse);
+router.put('/api/courses/:course_id/chapters/:chapter_id', Api.updateOneChapter);
+router.put('/api/courses/:course_id/chapters/:chapter_id/sections/:section_id', Api.updateOneSection);
 // 登陆注册
 router.post('/api/users', Api.register);
 router.post('/api/sessions', Api.login);

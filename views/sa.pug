@@ -69,7 +69,7 @@ html
                         // 增加course
                         case 2:
                             tree.set_icon($node, 'iconfont icon-tree');
-                            ajax('/api/courses', {
+                            ajax('/api/courses', 'post', {
                                 course_name: $node.text,
                                 category_id: $node.parent
                             }, function (res) {
@@ -79,7 +79,7 @@ html
                         // 增加chapter
                         case 3:
                             tree.set_icon($node, 'iconfont icon-leaf');
-                            ajax(`/api/courses/${$node.parents[0]}/chapters`, {
+                            ajax(`/api/courses/${$node.parents[0]}/chapters`, 'post', {
                                 title: $node.text
                             }, function (res) {
                                 tree.set_id($node, res.chapters[res.chapters.length - 1]._id);
@@ -88,7 +88,7 @@ html
                         // 增加section
                         case 4:
                             tree.set_icon($node, 'iconfont icon-blog');
-                            ajax(`/api/courses/${$node.parents[1]}/chapters/${$node.parents[0]}/sections`, {
+                            ajax(`/api/courses/${$node.parents[1]}/chapters/${$node.parents[0]}/sections`, 'post', {
                                 title: $node.text
                             });
                             break;
@@ -123,10 +123,10 @@ html
                 /**
                 * 一些封装的常用方法
                 */
-                function ajax (url, data, success, complete, error) {
+                function ajax (url, method, data, success, complete, error) {
                     $.ajax({
                         url: url,
-                        type: 'post',
+                        type: method,
                         async: false,
                         data: JSON.stringify(data),
                         contentType: 'application/json;charset=UTF-8',

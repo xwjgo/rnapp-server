@@ -120,8 +120,59 @@ class Api {
      */
     static createOneSection (req, res) {
         const section = req.body;
-        const chapterId = req.params.chapter_id;
-        courseCtl.createOneSection(chapterId, section, (err, doc) => {
+        const {course_id, chapter_id} = req.params;
+        courseCtl.createOneSection(course_id, chapter_id, section, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    /**
+     * 更新course信息
+     * @param req
+     * @param res
+     */
+    static updateOneCourse (req, res) {
+        const newCourse = req.body;
+        const courseId = req.params.course_id;
+        const canUpdateKeys = ['course_name', 'teacher', 'post_time', 'picture', 'category_id', 'description', 'comments', 'be_liked'];
+        courseCtl.updateOneCourse(courseId, _.pick(newCourse, canUpdateKeys), (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    /**
+     * 更新chapter信息
+     * @param req
+     * @param res
+     */
+    static updateOneChapter (req, res) {
+        const newChapter = req.body;
+        const {course_id, chapter_id} = req.params;
+        const canUpdateKeys = ['title'];
+        courseCtl.updateOneChapter(course_id, chapter_id, _.pick(newChapter, canUpdateKeys), (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    /**
+     * 更新section信息
+     * @param req
+     * @param res
+     */
+    static updateOneSection (req, res) {
+        const newSection = req.body;
+        const {course_id, chapter_id, section_id} = req.params;
+        const canUpdateKeys = ['title', 'video', 'html'];
+        courseCtl.updateOneSection(course_id, chapter_id, section_id, _.pick(newSection, canUpdateKeys), (err, doc) => {
             if (err) {
                 return res.endError(err);
             }
