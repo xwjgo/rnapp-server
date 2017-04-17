@@ -55,6 +55,9 @@ html
                                 }
                             };
                         }
+                    },
+                    dnd: {
+                        is_draggable: false
                     }
                 });
                 // 搜索组件
@@ -90,6 +93,12 @@ html
                             tree.set_icon($node, 'iconfont icon-blog');
                             ajax(`/api/courses/${$node.parents[1]}/chapters/${$node.parents[0]}/sections`, 'post', {
                                 title: $node.text
+                            }, function (res) {
+                                res.chapters.forEach(function (chapter) {
+                                    if (chapter._id === $node.parent) {
+                                        tree.set_id($node, chapter.sections[chapter.sections.length - 1]._id);
+                                    }
+                                });
                             });
                             break;
                         default:
@@ -104,16 +113,24 @@ html
                     switch (depth) {
                         // course重命名
                         case 2:
+                            ajax(`/api/courses/${$node.id}`, 'put', {
+                                course_name: $node.text
+                            });
                             break;
                         // chapter重命名
                         case 3:
+                            ajax(`/api/courses/${$node.parent}/chapters/${$node.id}`, 'put', {
+                                title: $node.text
+                            });
                             break;
                         // section重命名
                         case 4:
+                            ajax(`/api/courses/${$node.parents[1]}/chapters/${$node.parents[0]}/sections/${$node.id}`, 'put', {
+                                title: $node.text
+                            });
                             break;
                         default:
                     }
-                    console.log('重名名');
                 });
                 // 删除节点
                 $jstree.on('delete_node.jstree', function (e, data) {
@@ -139,6 +156,6 @@ html
                         error: function (res) {
                             error && error(res);
                         }
-                    })
+                    });
                 }
             });
