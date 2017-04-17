@@ -23,6 +23,9 @@ router.post('/api/courses/:course_id/chapters/:chapter_id/sections', Api.createO
 router.put('/api/courses/:course_id', Api.updateOneCourse);
 router.put('/api/courses/:course_id/chapters/:chapter_id', Api.updateOneChapter);
 router.put('/api/courses/:course_id/chapters/:chapter_id/sections/:section_id', Api.updateOneSection);
+router.delete('/api/courses/:course_id', Api.deleteOneCourse);
+router.delete('/api/courses/:course_id/chapters/:chapter_id', Api.deleteOneChapter);
+router.delete('/api/courses/:course_id/chapters/:chapter_id/sections/:section_id', Api.deleteOneSection);
 // 登陆注册
 router.post('/api/users', Api.register);
 router.post('/api/sessions', Api.login);

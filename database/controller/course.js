@@ -70,7 +70,10 @@ class CourseCtl {
      * @param callback
      */
     static createOneSection (courseId, chapterId, section, callback) {
-        Course.findById(courseId).exec((err, doc) => {
+        Course.findOne({
+            _id: courseId,
+            "chapters._id": chapterId
+        }).exec((err, doc) => {
             if (err) {
                 return callback(err);
             }
@@ -125,7 +128,10 @@ class CourseCtl {
      * @param callback
      */
     static updateOneSection (courseId, chapterId, sectionId, newSection, callback) {
-        Course.findById(courseId).exec((err, doc) => {
+        Course.findOne({
+            _id: courseId,
+            "chapters._id": chapterId
+        }).exec((err, doc) => {
             if (err) {
                 return callback(err);
             }
@@ -133,6 +139,39 @@ class CourseCtl {
                 return callback(new CustomError({code: 2000}));
             }
             doc.chapters.id(chapterId).sections.id(sectionId).set(newSection);
+            doc.save(callback);
+        });
+    }
+
+    static deleteOneCourse (courseId, callback) {
+        Course.findByIdAndRemove(courseId, callback);
+    }
+
+    static deleteOneChapter (courseId, chapterId, callback) {
+        Course.findById(courseId).exec((err, doc) => {
+            if (err) {
+                return callback(err);
+            }
+            if (!doc) {
+                return callback(new CustomError({code: 2000}));
+            }
+            doc.chapters.pull({_id: chapterId});
+            doc.save(callback);
+        });
+    }
+
+    static deleteOneSection (courseId, chapterId, sectionId, callback) {
+        Course.findOne({
+            _id: courseId,
+            "chapters._id": chapterId
+        }).exec((err, doc) => {
+            if (err) {
+                return callback(err);
+            }
+            if (!doc) {
+                return callback(new CustomError({code: 2000}));
+            }
+            doc.chapters.id(chapterId).sections.pull({_id: sectionId});
             doc.save(callback);
         });
     }

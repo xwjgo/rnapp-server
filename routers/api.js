@@ -180,6 +180,36 @@ class Api {
         });
     }
 
+
+    static deleteOneCourse (req, res) {
+        const courseId = req.params.course_id;
+        courseCtl.deleteOneCourse(courseId, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    static deleteOneChapter (req, res) {
+        const {course_id, chapter_id} = req.params;
+        courseCtl.deleteOneChapter(course_id, chapter_id, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    static deleteOneSection (req, res) {
+        const {course_id, chapter_id, section_id} = req.params;
+        courseCtl.deleteOneSection(course_id, chapter_id, section_id, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        })
+    }
     /**
      * 用户注册
      * @param req

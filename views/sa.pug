@@ -129,11 +129,20 @@ html
                                 title: $node.text
                             });
                             break;
-                        default:
                     }
                 });
                 // 删除节点
                 $jstree.on('delete_node.jstree', function (e, data) {
+                    const $node = data.node;
+                    const depth = $node.parents.length;
+                    switch (depth) {
+                        case 2:
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            break;
+                    }
                     console.log('删除节点');
                 });
 
