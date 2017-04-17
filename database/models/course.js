@@ -10,12 +10,21 @@ const db = require('../database');
  * @property {String} teacher - 教师名称
  * @property {Date} post_time - 课程发布时间
  * @property {String} picture - 课程封面图片的路径
- * @property {String} category - 课程所属分类
+ * @property {String} category_id - 课程所属分类id
  * @property {String} description - 课程描述
  * @property {Array} chapters - 课程章节
  * @property {Array} comments - 课程评论id
  * @property {Array} be_liked - 收藏该课程的用户id
  */
+const sectionSchema = new Schema({
+    title: String,
+    video: String,
+    html: String
+});
+const chapterSchema = new Schema({
+    title: String,
+    sections: [sectionSchema]
+});
 const courseSchema = new Schema({
     course_name: {
         type: String,
@@ -30,14 +39,7 @@ const courseSchema = new Schema({
     picture: String,
     category_id: ObjectId,
     description: String,
-    chapters: [{
-        title: String,
-        sections: [{
-            title: String,
-            video: String,
-            html: String
-        }]
-    }],
+    chapters: [chapterSchema],
     comments: [ObjectId],
     be_liked: [ObjectId]
 });
