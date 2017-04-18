@@ -44,9 +44,7 @@ app.use(session({
     })
 }));
 // 日志打印
-if (!isProduction) {
-    app.use(morgan('tiny'));
-}
+app.use(morgan('tiny'));
 // 错误处理
 app.use(errorMiddleware.errorHandle);
 // 路由
