@@ -136,11 +136,17 @@ html
                     const $node = data.node;
                     const depth = $node.parents.length;
                     switch (depth) {
+                        // 删除course
                         case 2:
+                            ajax(`/api/courses/${$node.id}`, 'delete');
                             break;
+                        // 删除chapter
                         case 3:
+                            ajax(`/api/courses/${$node.parent}/chapters/${$node.id}`, 'delete');
                             break;
+                        // 删除section
                         case 4:
+                            ajax(`/api/courses/${$node.parents[1]}/chapters/${$node.parents[0]}/sections/${$node.id}`, 'delete');
                             break;
                     }
                     console.log('删除节点');
