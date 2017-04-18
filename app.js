@@ -44,7 +44,11 @@ app.use(session({
     })
 }));
 // 日志打印
-app.use(morgan('tiny'));
+if (isProduction) {
+    app.use(morgan(':remote-addr :method :url :status :res[content-length] :response-time ms - :date'));
+} else {
+    app.use(morgan('tiny'));
+}
 // 错误处理
 app.use(errorMiddleware.errorHandle);
 // 路由
