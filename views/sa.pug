@@ -4,13 +4,22 @@ html
         title rnapp课程管理
         link(href=staticFile('/css/default/style.min.css') rel="stylesheet" type="text/css")
         link(href=staticFile('/css/iconfont/iconfont.css') rel="stylesheet" type="text/css")
+        style.
+            #course, #section {
+                display: none
+            }
     body
         #main
-            #search
-                input(type="text")
-                button 查询
-            #menu
-            #upload
+            #left
+                #search
+                    input(type="text")
+                    button 查询
+                #menu
+            #right
+                #course
+                    include ./courseupload
+                #section
+                    include ./sectionupload
         script(src=staticFile("/js/jquery-3.2.1.min.js") type="text/javascript")
         script(src=staticFile("/js/jstree.min.js") type="text/javascript")
         script(type="text/javascript").
@@ -104,7 +113,6 @@ html
                         default:
                             tree.delete_node($node);
                     }
-                    console.log(data);
                 });
                 // 给节点重命名
                 $jstree.on('rename_node.jstree', function (e, data) {
@@ -149,9 +157,63 @@ html
                             ajax(`/api/courses/${$node.parents[1]}/chapters/${$node.parents[0]}/sections/${$node.id}`, 'delete');
                             break;
                     }
-                    console.log('删除节点');
                 });
-
+                // 选择某个节点
+                $jstree.on('select_node.jstree', function (e, data) {
+                    const $node = data.node;
+                    const depth = $node.parents.length;
+                    switch (depth) {
+                        // 选择courses
+                        case 2:
+                            location.hash='#course';
+                            break;
+                        // 选择section
+                        case 4:
+                            location.hash='#section';
+                            break;
+                    }
+                    console.log($node);
+                });
+                // 使用hashchange实现简单路由
+                $(window).on('hashchange', function (e) {
+                    const hash = location.hash;
+                    switch (hash) {
+                        case '#course':
+                            $('#course').show().siblings().hide();
+                            break;
+                        case '#section':
+                            $('#section').show().siblings().hide();
+                            break;
+                    }
+                });
+                tree = $jstree.jstree(tree);
+                // course更新
+                $('#courseform').on('submit', function (e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    formData.append('courseId', tree.get_selected());
+                    $.ajax({
+                        url: '/upload/images',
+                        type: 'post',
+                        async: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                    });
+                });
+                // section更新
+                $('#sectionform').on('submit', function (e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    $.ajax({
+                        url: '/upload/videos',
+                        type: 'post',
+                        async: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                    });
+                });
                 /**
                 * 一些封装的常用方法
                 */

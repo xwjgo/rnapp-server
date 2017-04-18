@@ -1,0 +1,13 @@
+h3 course课程更新
+form#courseform(enctype="multipart/form-data")
+    div
+        label(for="teacher") teacher:
+        input#teacher(type="text" name="teacher")
+    div
+        label(for="picture") picture:
+        input#picture(type="file" name="picture" value="选择课程图片" accept="image/*")
+    div
+        label(for="description") description:
+        textarea#description(name="description")
+    div
+        input(type="submit" value="更新该课程")

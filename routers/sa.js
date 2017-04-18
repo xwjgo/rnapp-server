@@ -2,7 +2,6 @@
 const _ = require('lodash');
 const courseCtl = require('../database/controller/course');
 const categoryCtl = require('../database/controller/category');
-const CustomError = require('../error');
 const async = require('async');
 
 
@@ -81,6 +80,38 @@ class Sa {
                 nodes: JSON.stringify(result.getOtherNodes)
             });
         });
+    }
+
+    static imageUpload (req, res) {
+        const file = req.file;
+        const updateObj = {};
+        if (file) {
+           updateObj.picture = 'images/' + file.filename;
+        }
+        _.extend(updateObj, req.body);
+        console.log(updateObj);
+        // 更新数据库
+        const canUpdateKeys = ['picture', 'teacher', 'description'];
+        courseCtl.updateOneCourse(updateObj.courseId, _.pick(updateObj, canUpdateKeys), (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    static videoUpload (req, res) {
+        // 更新数据库中course的信息
+        // 返回新的course数据
+        const file = req.file;
+        const updateObj = {};
+        if (file) {
+            updateObj.video = 'videos/' + file.filename;
+        }
+        _.extend(updateObj, req.body);
+        // 更新数据库
+        console.log(updateObj);
+        res.end();
     }
 }
 

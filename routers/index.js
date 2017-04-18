@@ -1,16 +1,41 @@
 'use strict';
 
+const multer = require('multer');
 const express = require('express');
 const router = express.Router();
 const Api = require('./api');
 const Sa = require('./sa');
 const Auth = require('../middlewares/auth');
 
+// multer上传配置
+const uploader = multer({storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+        if (req.url === '/upload/images') {
+            console.log(req.url);
+            cb(null, 'public/images');
+        }
+        if (req.url === '/upload/videos') {
+            cb(null, 'public/videos')
+        }
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${+new Date()}.${file.originalname}`);
+    }
+}), fileFilter: (req, file, cb) => {
+    const checkImageUpload = req.url === '/upload/images' && /^image\//.test(file.mimetype);
+    const checkVideoUpload = req.url === '/upload/videos' && /^video\//.test(file.mimetype);
+    if (checkImageUpload || checkVideoUpload) {
+        return cb(null, true);
+    }
+    cb(null, false);
+}});
 /**
  * 路由总调控
  */
 // 课程后台管理
 router.get('/sa', Sa.renderSaPage);
+router.post('/upload/images', uploader.single('picture'), Sa.imageUpload);
+router.post('/upload/videos', uploader.single('video'), Sa.videoUpload);
 // 课程资源
 router.get('/api/categories', Auth.authorize, Api.getAllCategories);
 router.get('/api/categories/:category_id', Auth.authorize, Api.getOneCategory);
