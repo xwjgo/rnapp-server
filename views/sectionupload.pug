@@ -3,6 +3,8 @@ form#sectionform(enctype="multipart/form-data")
     div
         label(for="video") video:
         input#video(type="file" name="video" value="上传视频" accept="video/*")
+        span 旧视频:
+        span#videoUrl
     div#richtext
     div
         input(type="submit" value="更新该小节")

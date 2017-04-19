@@ -6,6 +6,9 @@ const async = require('async');
 
 
 class Sa {
+    static renderLoginPage (req, res) {
+        res.render('login');
+    }
     /**
      * sa页面
      * @param req

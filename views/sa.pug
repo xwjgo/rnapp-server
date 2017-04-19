@@ -190,17 +190,41 @@ body
                     const $node = data.node;
                     const depth = $node.parents.length;
                     const selectedNode = tree.get_selected(true)[0];
+                    const $course = $('#course');
+                    const $section = $('#section');
+                    const $title = $('.title');
                     switch (depth) {
                         // 选择courses
                         case 2:
-                            $('#course').show().siblings().hide();
-                            $('.title').html('更新course:' + selectedNode.text );
+                            $course.show().siblings().hide();
+                            $title.html('更新course:' + selectedNode.text );
+                            $.get(`/api/courses/${$node.id}`, function (data) {
+                                 const {teacher, picture, description} = data;
+                                 $('#teacher').val(teacher);
+                                 $('#description').val(description);
+                                 $('#pictureUrl').empty().append($('<a/>').text(picture).attr({href: picture}));
+                            });
                             break;
                         // 选择section
                         case 4:
-                            $('#section').show().siblings().hide();
-                            $('.title').html('更新section:  ' + selectedNode.text );
+                            $section.show().siblings().hide();
+                            $title.html('更新section:  ' + selectedNode.text );
+                            $.get(`/api/courses/${$node.parents[1]}`, function (data) {
+                                data.chapters.forEach(function (c) {
+                                    if (c._id === $node.parents[0]) {
+                                        c.sections.forEach(function (s) {
+                                            if (s._id === $node.id) {
+                                                $('#videoUrl').empty().append($('<a/>').text(s.video).attr({href: s.video}));
+                                                editor.$txt.html(s.html);
+                                            }
+                                        });
+                                    }
+                                });
+                            });
                             break;
+                        default:
+                            $section.hide();
+                            $course.hide();
                     }
                 });
                 // 富文本编辑器
@@ -228,7 +252,7 @@ body
                         processData: false,
                         data: formData,
                         success: function () {
-                            alert('course更新成功！')
+                            alert('course更新成功！');
                         },
                         error: function () {
                             alert('section更新失败');

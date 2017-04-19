@@ -6,6 +6,8 @@ form#courseform(enctype="multipart/form-data")
     div
         label(for="picture") picture:
         input#picture(type="file" name="picture" value="选择课程图片" accept="image/*")
+        span 旧图片:
+        span#pictureUrl
     div
         label(for="description") description:
         textarea#description(name="description" rows="10" cols="60")

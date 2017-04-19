@@ -47,7 +47,8 @@ app.use(session({
 if (isProduction) {
     app.use(morgan(':remote-addr :method :url :status :res[content-length] :response-time ms - :date'));
 } else {
-    app.use(morgan('tiny'));
+    app.use(morgan(':remote-addr :method :url :status :res[content-length] :response-time ms - :date[iso]'));
+    // app.use(morgan('tiny'));
 }
 // 错误处理
 app.use(errorMiddleware.errorHandle);
