@@ -113,7 +113,6 @@ class Sa {
         _.extend(updateObj, _.pickBy(req.body, (val) => {
             return !_.isEmpty(val);
         }));
-        console.log(updateObj);
         // 更新数据库
         const canUpdateKeys = ['picture', 'teacher', 'description'];
         courseCtl.updateOneCourse(updateObj.courseId, _.pick(updateObj, canUpdateKeys), (err, doc) => {
@@ -135,9 +134,13 @@ class Sa {
         if (file) {
             updateObj.video = `videos/${file.filename}`;
         }
-        _.extend(updateObj, _.pickBy(req.body, (val) => {
+        _.extend(updateObj, _.pickBy(req.body, (val, key) => {
+            if (key === 'html') {
+                return !_.isEqual(val, '<p><br></p>');
+            }
             return !_.isEmpty(val);
         }));
+        console.log(updateObj);
         // 更新数据库
         const canUpdateKeys = ['video', 'html'];
         courseCtl.updateOneSection(updateObj.courseId, updateObj.chapterId, updateObj.sectionId, _.pick(updateObj, canUpdateKeys), (err, doc) => {
