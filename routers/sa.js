@@ -6,6 +6,11 @@ const async = require('async');
 
 
 class Sa {
+    /**
+     * sa页面
+     * @param req
+     * @param res
+     */
     static renderSaPage (req, res) {
         let nodes = [];
         async.auto({
@@ -15,13 +20,22 @@ class Sa {
                     if (err) {
                         return callback(err);
                     }
-                    _.forEach(docs, (doc) => {
-                        nodes.push({
+                    _.forEach(docs, (doc, index) => {
+                        let defaultConfig = {
                             id: doc._id,
                             parent: '#',
                             text: doc.category_name,
                             icon: 'iconfont icon-category'
-                        });
+                        };
+                        if (index === 0) {
+                            nodes.push(_.extend(defaultConfig, {
+                                state: {
+                                    opened: true
+                                }
+                            }));
+                        } else {
+                            nodes.push(defaultConfig)
+                        }
                     });
                     return callback(null, nodes);
                 })
@@ -49,7 +63,10 @@ class Sa {
                                     id: cNode._id,
                                     parent: doc._id,
                                     text: cNode.title,
-                                    icon: 'iconfont icon-leaf'
+                                    icon: 'iconfont icon-leaf',
+                                    state: {
+                                        disabled: true
+                                    }
                                 });
                                 // section节点
                                 const sectionNodes = cNode.sections;
@@ -82,14 +99,18 @@ class Sa {
         });
     }
 
+    /**
+     * 更新course中picture等字段信息
+     * @param req
+     * @param res
+     */
     static imageUpload (req, res) {
         const file = req.file;
         const updateObj = {};
         if (file) {
-           updateObj.picture = 'images/' + file.filename;
+           updateObj.picture = `images/${file.filename}`;
         }
         _.extend(updateObj, req.body);
-        console.log(updateObj);
         // 更新数据库
         const canUpdateKeys = ['picture', 'teacher', 'description'];
         courseCtl.updateOneCourse(updateObj.courseId, _.pick(updateObj, canUpdateKeys), (err, doc) => {
@@ -100,18 +121,38 @@ class Sa {
         });
     }
 
+    /**
+     * 更新section中video等字段信息
+     * @param req
+     * @param res
+     */
     static videoUpload (req, res) {
-        // 更新数据库中course的信息
-        // 返回新的course数据
         const file = req.file;
         const updateObj = {};
         if (file) {
-            updateObj.video = 'videos/' + file.filename;
+            updateObj.video = `videos/${file.filename}`;
         }
         _.extend(updateObj, req.body);
         // 更新数据库
-        console.log(updateObj);
-        res.end();
+        const canUpdateKeys = ['video', 'html'];
+        courseCtl.updateOneSection(updateObj.courseId, updateObj.chapterId, updateObj.sectionId, _.pick(updateObj, canUpdateKeys), (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    /**
+     * 针对richtext插件中上传图片的部分
+     * @param req
+     * @param res
+     */
+    static richtextUpload (req, res) {
+        const file = req.file;
+        if (file) {
+            res.end(`images/${file.filename}`);
+        }
     }
 }
 

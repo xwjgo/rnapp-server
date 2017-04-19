@@ -4,7 +4,22 @@ html
         title rnapp课程管理
         link(href=staticFile('/css/default/style.min.css') rel="stylesheet" type="text/css")
         link(href=staticFile('/css/iconfont/iconfont.css') rel="stylesheet" type="text/css")
+        link(href=staticFile('/css/richtext/css/wangEditor.min.css') rel="stylesheet" type="text/css")
         style.
+            #main {
+                display: flex;
+                min-width: 1000px;
+                height: 100%;
+            }
+            #left {
+                width: 25%;
+            }
+            #right {
+                width: 70%;
+            }
+            #richtext {
+                height: 600px;
+            }
             #course, #section {
                 display: none
             }
@@ -22,6 +37,7 @@ html
                     include ./sectionupload
         script(src=staticFile("/js/jquery-3.2.1.min.js") type="text/javascript")
         script(src=staticFile("/js/jstree.min.js") type="text/javascript")
+        script(src=staticFile("/js/wangEditor.min.js") type="text/javascript")
         script(type="text/javascript").
             $(function () {
                 const $jstree = $('#menu');
@@ -31,9 +47,12 @@ html
                     core: {
                         multiple: false,
                         check_callback: true,
+                        themes: {
+                            variant: 'large'
+                        },
                         data: !{nodes}
                     },
-                    plugins: ['dnd', 'wholerow', 'contextmenu', 'search'],
+                    plugins: ['unique', 'dnd', 'wholerow', 'contextmenu', 'search'],
                     contextmenu: {
                         items: function ($node) {
                             tree = $jstree.jstree(true);
@@ -91,6 +110,7 @@ html
                         // 增加chapter
                         case 3:
                             tree.set_icon($node, 'iconfont icon-leaf');
+                            tree.disable_node($node);
                             ajax(`/api/courses/${$node.parents[0]}/chapters`, 'post', {
                                 title: $node.text
                             }, function (res) {
@@ -162,31 +182,32 @@ html
                 $jstree.on('select_node.jstree', function (e, data) {
                     const $node = data.node;
                     const depth = $node.parents.length;
+                    const selectedNode = tree.get_selected(true)[0];
                     switch (depth) {
                         // 选择courses
                         case 2:
-                            location.hash='#course';
+                            $('#course').show().siblings().hide();
+                            $('.title').html('更新course:' + selectedNode.text );
                             break;
                         // 选择section
                         case 4:
-                            location.hash='#section';
-                            break;
-                    }
-                    console.log($node);
-                });
-                // 使用hashchange实现简单路由
-                $(window).on('hashchange', function (e) {
-                    const hash = location.hash;
-                    switch (hash) {
-                        case '#course':
-                            $('#course').show().siblings().hide();
-                            break;
-                        case '#section':
                             $('#section').show().siblings().hide();
+                            $('.title').html('更新section:  ' + selectedNode.text );
                             break;
                     }
                 });
+                // 富文本编辑器
                 tree = $jstree.jstree(tree);
+                const editor = new wangEditor('richtext');
+                editor.config.uploadImgUrl = '/upload/richtext';
+                editor.config.uploadImgFileName = 'richtextImage';
+                editor.config.menus = $.map(wangEditor.config.menus, function (item, key) {
+                    if (item === 'video' || item === 'location') {
+                        return null;
+                    }
+                    return item;
+                });
+                editor.create();
                 // course更新
                 $('#courseform').on('submit', function (e) {
                     e.preventDefault();
@@ -199,12 +220,23 @@ html
                         contentType: false,
                         processData: false,
                         data: formData,
+                        success: function () {
+                            alert('course更新成功！')
+                        },
+                        error: function () {
+                            alert('section更新失败');
+                        }
                     });
                 });
                 // section更新
                 $('#sectionform').on('submit', function (e) {
                     e.preventDefault();
                     const formData = new FormData(this);
+                    const $selectedNode = tree.get_selected(true)[0];
+                    formData.append('html', editor.$txt.html());
+                    formData.append('sectionId', $selectedNode.id);
+                    formData.append('chapterId', $selectedNode.parents[0]);
+                    formData.append('courseId', $selectedNode.parents[1]);
                     $.ajax({
                         url: '/upload/videos',
                         type: 'post',
@@ -212,6 +244,12 @@ html
                         contentType: false,
                         processData: false,
                         data: formData,
+                        success: function () {
+                            alert('section更新成功！');
+                        },
+                        error: function () {
+                            alert('section更新失败');
+                        }
                     });
                 });
                 /**

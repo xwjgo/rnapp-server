@@ -10,8 +10,7 @@ const Auth = require('../middlewares/auth');
 // multer上传配置
 const uploader = multer({storage: multer.diskStorage({
     destination: (req, file, cb) => {
-        if (req.url === '/upload/images') {
-            console.log(req.url);
+        if (req.url === '/upload/images' || req.url === '/upload/richtext') {
             cb(null, 'public/images');
         }
         if (req.url === '/upload/videos') {
@@ -23,8 +22,9 @@ const uploader = multer({storage: multer.diskStorage({
     }
 }), fileFilter: (req, file, cb) => {
     const checkImageUpload = req.url === '/upload/images' && /^image\//.test(file.mimetype);
+    const checkRichtextUpload = req.url === '/upload/richtext' && /^image\//.test(file.mimetype);
     const checkVideoUpload = req.url === '/upload/videos' && /^video\//.test(file.mimetype);
-    if (checkImageUpload || checkVideoUpload) {
+    if (checkImageUpload || checkVideoUpload || checkRichtextUpload) {
         return cb(null, true);
     }
     cb(null, false);
@@ -36,6 +36,7 @@ const uploader = multer({storage: multer.diskStorage({
 router.get('/sa', Sa.renderSaPage);
 router.post('/upload/images', uploader.single('picture'), Sa.imageUpload);
 router.post('/upload/videos', uploader.single('video'), Sa.videoUpload);
+router.post('/upload/richtext', uploader.single('richtextImage'), Sa.richtextUpload);
 // 课程资源
 router.get('/api/categories', Auth.authorize, Api.getAllCategories);
 router.get('/api/categories/:category_id', Auth.authorize, Api.getOneCategory);
