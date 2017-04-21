@@ -39,9 +39,7 @@ const courseSchema = new Schema({
     picture: String,
     category_id: ObjectId,
     description: String,
-    chapters: [chapterSchema],
-    comments: [ObjectId],
-    be_liked: [ObjectId]
+    chapters: [chapterSchema]
 });
 
 module.exports = db.model('course', courseSchema);
