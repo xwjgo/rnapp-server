@@ -53,6 +53,11 @@ router.put('/api/courses/:course_id/chapters/:chapter_id/sections/:section_id', 
 router.delete('/api/courses/:course_id', Auth.authorize, Api.deleteOneCourse);
 router.delete('/api/courses/:course_id/chapters/:chapter_id', Auth.authorize, Api.deleteOneChapter);
 router.delete('/api/courses/:course_id/chapters/:chapter_id/sections/:section_id', Auth.authorize, Api.deleteOneSection);
+// 评论和评分
+router.get('/api/comments/:section_id', Auth.authorize, Api.getCommentsInOneSection);
+router.get('/api/scores/:section_id', Auth.authorize, Api.getScoresInOneSection);
+router.post('/api/comments', Auth.authorize, Api.createOneComment);
+router.post('/api/scores', Auth.authorize, Api.createOneScore);
 // 登陆注册
 router.post('/api/users', Api.register);
 router.post('/api/sessions', Api.login);

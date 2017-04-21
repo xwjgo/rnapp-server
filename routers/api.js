@@ -5,6 +5,8 @@ const async = require('async');
 const categoryCtl = require('../database/controller/category');
 const courseCtl = require('../database/controller/course');
 const userCtl = require('../database/controller/user');
+const commentCtl = require('../database/controller/comments');
+const scoreCtl = require('../database/controller/score');
 const CustomError = require('../error');
 const Utils = require('../utils');
 
@@ -308,6 +310,46 @@ class Api {
                 return res.endError(err);
             }
             return res.sendStatus(200);
+        });
+    }
+
+    static createOneComment (req, res) {
+        const comment = req.body;
+        commentCtl.createOneComment(comment, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    static getCommentsInOneSection (req, res) {
+        const sectionId = req.params.section_id;
+        commentCtl.findCommentsBySectionId(sectionId, (err, docs) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(docs);
+        });
+    }
+
+    static createOneScore (req, res) {
+        const score = req.body;
+        scoreCtl.createOneScore(score, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    static getScoresInOneSection (req, res) {
+        const sectionId = req.params.section_id;
+        scoreCtl.findScoresBySectionId(sectionId, (err, docs) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(docs);
         });
     }
 }
