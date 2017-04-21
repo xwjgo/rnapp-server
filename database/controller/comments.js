@@ -9,10 +9,8 @@ class commentCtl {
         newComment.save(callback);
     }
 
-    static findCommentsBySectionId (sectionId, callback) {
-        Comment.find({
-            section_id: sectionId
-        }, callback);
+    static findCommentsByQuery (query, callback) {
+        Comment.find(query, callback);
     }
 }
 

@@ -8,10 +8,8 @@ class scoreCtl {
         newScore.save(callback);
     }
 
-    static findScoresBySectionId (sectionId, callback) {
-        Score.find({
-            section_id: sectionId
-        }, callback);
+    static findScoresByQuery (query, callback) {
+        Score.find(query, callback);
     }
 }
 

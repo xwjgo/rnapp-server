@@ -323,9 +323,9 @@ class Api {
         });
     }
 
-    static getCommentsInOneSection (req, res) {
-        const sectionId = req.params.section_id;
-        commentCtl.findCommentsBySectionId(sectionId, (err, docs) => {
+    static getCommentsByQuery (req, res) {
+        const query = req.query;
+        commentCtl.findCommentsByQuery(query, (err, docs) => {
             if (err) {
                 return res.endError(err);
             }
@@ -343,9 +343,9 @@ class Api {
         });
     }
 
-    static getScoresInOneSection (req, res) {
-        const sectionId = req.params.section_id;
-        scoreCtl.findScoresBySectionId(sectionId, (err, docs) => {
+    static getScoresByQuery (req, res) {
+        const query = req.query;
+        scoreCtl.findScoresByQuery(query, (err, docs) => {
             if (err) {
                 return res.endError(err);
             }
