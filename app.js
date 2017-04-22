@@ -13,6 +13,9 @@ const settings = require('./settings');
 const routers = require('./routers');
 const errorMiddleware = require('./middlewares/error');
 const app = express();
+const socketIo = require('socket.io');
+const http = require('http').Server(app);
+const io = socketIo(http);
 const isProduction = (settings.env === 'production');
 
 // 模板引擎
@@ -59,7 +62,7 @@ app.all('*', (req, res) => {
 });
 
 const port = settings.server.port;
-app.listen(port, (error) => {
+http.listen(port, (error) => {
     if (error) {
         console.error(error.stack);
     } else {
@@ -67,3 +70,13 @@ app.listen(port, (error) => {
     }
 });
 
+// socket.io
+io.on('connection', (socket) => {
+    console.log('one user connected...');
+    socket.on('disconnect', () => {
+        console.log('one user disconnected...')
+    });
+    socket.on('chat-message', (msg) => {
+        io.emit('chat-message', msg);
+    });
+});
