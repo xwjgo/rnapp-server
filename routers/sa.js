@@ -1,5 +1,6 @@
 'use strict';
 const _ = require('lodash');
+const settings = require('../settings');
 const courseCtl = require('../database/controller/course');
 const categoryCtl = require('../database/controller/category');
 const async = require('async');
@@ -162,7 +163,12 @@ class Sa {
     static richtextUpload (req, res) {
         const file = req.file;
         if (file) {
-            res.end(`images/${file.filename}`);
+            const {host, port} = settings.server;
+            if (settings.env === 'production') {
+                res.end(`http://${host}:${port}/images/${file.filename}`);
+            } else {
+                res.end(`images/${file.filename}`);
+            }
         }
     }
 }
