@@ -215,7 +215,7 @@ body
                                         c.sections.forEach(function (s) {
                                             if (s._id === $node.id) {
                                                 $('#videoUrl').empty().append($('<a/>').text(s.video).attr({href: s.video}));
-                                                editor.$txt.html(s.html);
+                                                editor.$txt.html(s.html || '<p><br></p>');
                                             }
                                         });
                                     }
