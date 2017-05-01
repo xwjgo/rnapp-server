@@ -232,6 +232,7 @@ body
                 const editor = new wangEditor('richtext');
                 editor.config.uploadImgUrl = '/upload/richtext';
                 editor.config.uploadImgFileName = 'richtextImage';
+                editor.config.pasteFilter = false;
                 editor.config.menus = $.map(wangEditor.config.menus, function (item, key) {
                     if (item === 'video' || item === 'location') {
                         return null;
