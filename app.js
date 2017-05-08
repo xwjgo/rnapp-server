@@ -72,11 +72,24 @@ http.listen(port, (error) => {
 
 // socket.io
 io.on('connection', (socket) => {
-    console.log('one user connected...');
-    socket.on('disconnect', () => {
-        console.log('one user disconnected...')
+    const {username, room_id} = socket.handshake.query;
+    socket.join(room_id);
+    // 连接后，发射join
+    io.in(room_id).emit('join', {username, type: 'join'});
+    console.log(`${username} joined the room ${room_id} ...`);
+
+    // 收到消息，发射chat-message
+    socket.on('chat-message', (message) => {
+        io.in(room_id).emit('chat-message', {
+            username,
+            message,
+            type: 'chat-message'
+        });
     });
-    socket.on('chat-message', (msg) => {
-        io.emit('chat-message', msg);
+
+    // 断开连接，发射leave
+    socket.on('disconnect', () => {
+        io.in(room_id).emit('leave', {username, type: 'leave'});
+        console.log(`${username} leaved the room ${room_id} ...`);
     });
 });
