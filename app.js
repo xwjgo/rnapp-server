@@ -90,6 +90,7 @@ io.on('connection', (socket) => {
     // 断开连接，发射leave
     socket.on('disconnect', () => {
         io.in(room_id).emit('leave', {username, type: 'leave'});
+        socket.leave(room_id);
         console.log(`${username} leaved the room ${room_id} ...`);
     });
 });
