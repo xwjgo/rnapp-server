@@ -74,6 +74,12 @@ http.listen(port, (error) => {
 io.on('connection', (socket) => {
     const {username, room_id} = socket.handshake.query;
     socket.join(room_id);
+
+    // 更新人数
+    io.in(room_id).clients((error, clients) => {
+        io.in(room_id).emit('new-number', clients.length);
+    });
+
     // 连接后，发射join
     io.in(room_id).emit('join', {username, type: 'join'});
     console.log(`${username} joined the room ${room_id} ...`);
@@ -92,5 +98,9 @@ io.on('connection', (socket) => {
         io.in(room_id).emit('leave', {username, type: 'leave'});
         socket.leave(room_id);
         console.log(`${username} leaved the room ${room_id} ...`);
+        // 更新人数
+        io.in(room_id).clients((error, clients) => {
+            io.in(room_id).emit('new-number', clients.length);
+        });
     });
 });
