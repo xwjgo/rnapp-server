@@ -24,8 +24,7 @@ const userSchema = new Schema ({
         type: Date,
         default: null
     },
-    likes: [ObjectId],
-    collections: [ObjectId]
+    likes: [ObjectId]
 });
 
 module.exports = db.model('user', userSchema);

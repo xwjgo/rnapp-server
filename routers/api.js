@@ -352,6 +352,28 @@ class Api {
             res.json(docs);
         });
     }
+
+    static addOneLike (req, res) {
+        const {user_id} = req.params;
+        const {section_id} = req.body;
+        userCtl.addOneLike(user_id, section_id, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    static deleteOneLike (req, res) {
+        const {user_id} = req.params;
+        const {section_id} = req.body;
+        userCtl.deleteOneLike(user_id, section_id, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
 }
 
 module.exports = Api;

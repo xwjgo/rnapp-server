@@ -62,5 +62,8 @@ router.post('/api/scores', Auth.authorize, Api.createOneScore);
 router.post('/api/users', Api.register);
 router.post('/api/sessions', Api.login);
 router.delete('/api/sessions', Auth.authorize, Api.logout);
+// 用户信息
+router.post('/api/users/:user_id/likes', Auth.authorize, Api.addOneLike);
+router.delete('/api/users/:user_id/likes', Auth.authorize, Api.deleteOneLike);
 
 module.exports = router;

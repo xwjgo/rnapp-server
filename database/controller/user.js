@@ -19,6 +19,14 @@ class UserCtl {
     static updateLoginTime(uid, callback) {
         User.findByIdAndUpdate(uid, {$set: {last_login_time: new Date()}}, {new: true}, callback);
     }
+
+    static addOneLike (userId, sectionId, callback) {
+        User.findByIdAndUpdate(userId, {$addToSet: {likes: sectionId}}, {new: true}, callback);
+    }
+
+    static deleteOneLike (userId, sectionId, callback) {
+        User.findByIdAndUpdate(userId, {$pull: {likes: sectionId}}, {new: true}, callback);
+    }
 }
 
 module.exports = UserCtl;
