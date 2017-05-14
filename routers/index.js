@@ -55,9 +55,10 @@ router.delete('/api/courses/:course_id/chapters/:chapter_id', Auth.authorize, Ap
 router.delete('/api/courses/:course_id/chapters/:chapter_id/sections/:section_id', Auth.authorize, Api.deleteOneSection);
 // 评论和评分
 router.get('/api/comments', Auth.authorize, Api.getCommentsByQuery);
-router.get('/api/scores', Auth.authorize, Api.getScoresByQuery);
 router.post('/api/comments', Auth.authorize, Api.createOneComment);
+router.get('/api/scores', Auth.authorize, Api.getScoresByQuery);
 router.post('/api/scores', Auth.authorize, Api.createOneScore);
+router.put('/api/scores', Auth.authorize, Api.updateOneScore);
 // 登陆注册
 router.post('/api/users', Api.register);
 router.post('/api/sessions', Api.login);

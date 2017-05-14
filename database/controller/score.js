@@ -11,6 +11,10 @@ class scoreCtl {
     static findScoresByQuery (query, callback) {
         Score.find(query, callback);
     }
+
+    static findByQueryAndUpdate (query, score, callback) {
+        Score.findOneAndUpdate(query, {$set: {score: score}}, {new: true}, callback);
+    }
 }
 
 module.exports = scoreCtl;

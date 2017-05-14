@@ -353,6 +353,17 @@ class Api {
         });
     }
 
+    static updateOneScore (req, res) {
+        const query = req.query;
+        const {score} = req.body;
+        scoreCtl.findByQueryAndUpdate(query, score, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
     static addOneLike (req, res) {
         const {user_id} = req.params;
         const {section_id} = req.body;
