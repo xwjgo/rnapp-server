@@ -14,7 +14,6 @@ const db = require('../database');
  * @property be_liked - 该评论的点赞用户
  */
 const commentSchema = new Schema({
-    parent_id: ObjectId,
     section_id: {
         type: ObjectId,
         required: true
@@ -23,6 +22,7 @@ const commentSchema = new Schema({
         type: String,
         required: true
     },
+    parent_username: String,
     post_time: {
         type: Date,
         default: Date.now
