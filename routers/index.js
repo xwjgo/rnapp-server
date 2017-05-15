@@ -56,6 +56,8 @@ router.delete('/api/courses/:course_id/chapters/:chapter_id/sections/:section_id
 // 评论和评分
 router.get('/api/comments', Auth.authorize, Api.getCommentsByQuery);
 router.post('/api/comments', Auth.authorize, Api.createOneComment);
+router.post('/api/comments/:comment_id/likes', Auth.authorize, Api.addOneCommentLike);
+router.delete('/api/comments/:comment_id/likes', Auth.authorize, Api.deleteOneCommentLike);
 router.get('/api/scores', Auth.authorize, Api.getScoresByQuery);
 router.post('/api/scores', Auth.authorize, Api.createOneScore);
 router.put('/api/scores', Auth.authorize, Api.updateOneScore);

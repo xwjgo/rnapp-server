@@ -385,6 +385,28 @@ class Api {
             res.json(doc);
         });
     }
+
+    static addOneCommentLike (req, res) {
+        const {comment_id} = req.params;
+        const {user_id} = req.body;
+        commentCtl.addOneCommentLike(comment_id, user_id, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    static deleteOneCommentLike (req, res) {
+        const {comment_id} = req.params;
+        const {user_id} = req.body;
+        commentCtl.deleteOneCommentLike(comment_id, user_id, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
 }
 
 module.exports = Api;

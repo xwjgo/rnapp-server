@@ -12,6 +12,14 @@ class commentCtl {
     static findCommentsByQuery (query, callback) {
         Comment.find(query, callback);
     }
+
+    static addOneCommentLike (comment_id, user_id, callback) {
+        Comment.findByIdAndUpdate(comment_id, {$addToSet: {be_liked: user_id}}, {new: true}, callback);
+    }
+
+    static deleteOneCommentLike (comment_id, user_id, callback) {
+        Comment.findByIdAndUpdate(comment_id, {$pull: {be_liked: user_id}}, {new: true}, callback);
+    }
 }
 
 module.exports = commentCtl;
