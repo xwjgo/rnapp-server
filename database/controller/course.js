@@ -10,9 +10,10 @@ class CourseCtl {
     /**
      * 获取所有课程
      * @param callback
+     * @param query
      */
-    static findAllCourse (callback) {
-        Course.find({}, callback);
+    static findCourseByQuery (query, callback) {
+        Course.find(query, callback);
     }
 
     /**

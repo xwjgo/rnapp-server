@@ -45,8 +45,9 @@ class Api {
      * @param req
      * @param res
      */
-    static getAllCourses (req, res) {
-        courseCtl.findAllCourse((err, docs) => {
+    static getCoursesByQuery (req, res) {
+        const query = req.query;
+        courseCtl.findCourseByQuery(query, (err, docs) => {
             if (err) {
                 return res.endError(err);
             }
