@@ -310,7 +310,9 @@ class Api {
             if (err) {
                 return res.endError(err);
             }
-            return res.sendStatus(200);
+            return res.json({
+                message: '用户注销成功'
+            });
         });
     }
 
