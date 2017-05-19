@@ -68,5 +68,8 @@ router.delete('/api/sessions', Auth.authorize, Api.logout);
 // 用户信息
 router.post('/api/users/:user_id/likes', Auth.authorize, Api.addOneLike);
 router.delete('/api/users/:user_id/likes', Auth.authorize, Api.deleteOneLike);
+// 用户事件
+router.post('/api/events', Auth.authorize, Api.createOneEvent);
+router.get('/api/events', Api.getEventsByQuery);
 
 module.exports = router;

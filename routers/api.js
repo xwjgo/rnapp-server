@@ -7,6 +7,7 @@ const courseCtl = require('../database/controller/course');
 const userCtl = require('../database/controller/user');
 const commentCtl = require('../database/controller/comments');
 const scoreCtl = require('../database/controller/score');
+const eventCtl = require('../database/controller/event');
 const CustomError = require('../error');
 const Utils = require('../utils');
 
@@ -408,6 +409,27 @@ class Api {
                 return res.endError(err);
             }
             res.json(doc);
+        });
+    }
+
+    static createOneEvent (req, res) {
+        const eventFields = ['username', 'event_name', 'post_time'];
+        const eventObj = _.pick(req.body, eventFields);
+        eventCtl.createOneEvent(eventObj, (err, doc) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(doc);
+        });
+    }
+
+    static getEventsByQuery (req, res) {
+        const query = req.query;
+        eventCtl.getEventsByQuery(query, (err, docs) => {
+            if (err) {
+                return res.endError(err);
+            }
+            res.json(docs);
         });
     }
 }
